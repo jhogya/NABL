@@ -16,7 +16,13 @@ async function fetchLeague({ leagueId, seasonId, s2, swid, views, scoringPeriodI
       Cookie: `espn_s2=${s2}; SWID=${swid}`,
       'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-      Accept: 'application/json',
+      Accept: 'application/json, text/plain, */*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      Referer: `https://fantasy.espn.com/football/league?leagueId=${leagueId}&seasonId=${seasonId}`,
+      Origin: 'https://fantasy.espn.com',
+      'sec-fetch-site': 'same-origin',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-dest': 'empty',
     },
   });
 

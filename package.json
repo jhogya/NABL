@@ -1,9 +1,0 @@
-{
-  "name": "fantasy-genius-clone",
-  "version": "1.0.0",
-  "description": "Custom weekly power rankings site for a private ESPN fantasy football league",
-  "private": true,
-  "dependencies": {
-    "@netlify/blobs": "^7.0.0"
-  }
-}

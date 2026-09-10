@@ -47,44 +47,11 @@ async function refreshRankings() {
   const matchupAwards = computeMatchupAwards(boxscoreData, recapWeek);
   const { topPerformers, busts } = extractPlayerPerformances(boxscoreData, recapWeek);
 
-  const store = getStore(STORE_NAME);
+  const store = getStore({
+    name: STORE_NAME,
+    siteID: process.env.NETLIFY_SITE_ID,
+    token: process.env.NETLIFY_API_TOKEN,
+  });
   const history = (await store.get(HISTORY_KEY, { type: 'json' })) || [];
   const previousSnapshot = history
-    .filter((h) => h.week < currentWeek)
-    .sort((a, b) => b.week - a.week)[0];
-
-  const { rankings: rankingsWithMovement, recapLines } = buildRecap(
-    rankings,
-    previousSnapshot ? previousSnapshot.rankings : null
-  );
-
-  let aiRecap = null;
-  try {
-    aiRecap = await generateAiRecap({ matchupAwards, topPerformers, busts, week: recapWeek });
-  } catch (err) {
-    console.error('AI recap generation failed, falling back to template copy:', err.message);
-  }
-
-  const snapshot = {
-    week: currentWeek,
-    recapWeek,
-    generatedAt: new Date().toISOString(),
-    rankings: rankingsWithMovement,
-    recapLines,
-    matchupAwards,
-    topPerformers,
-    busts,
-    aiRecap,
-  };
-
-  const historyWithoutThisWeek = history.filter((h) => h.week !== currentWeek);
-  historyWithoutThisWeek.push(snapshot);
-  historyWithoutThisWeek.sort((a, b) => a.week - b.week);
-
-  await store.setJSON(HISTORY_KEY, historyWithoutThisWeek);
-  await store.setJSON(LATEST_KEY, snapshot);
-
-  return snapshot;
-}
-
-module.exports = { refreshRankings, STORE_NAME, HISTORY_KEY, LATEST_KEY };
+    .filter((h) => h.week
